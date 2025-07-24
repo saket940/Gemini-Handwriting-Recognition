@@ -46,6 +46,6 @@ app.post("/recognize", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server running on http://localhost:3000");
 });
