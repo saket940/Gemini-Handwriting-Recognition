@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gemini Handwriting Recognition</title>
+  <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f4f8;
+  color: #333;
+  padding: 2rem;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #444;
+}
+
+input[type="file"] {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+button {
+  padding: 0.6rem 1.5rem;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#result {
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  color: #222;
+  background-color: #e6f2ff;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  word-wrap: break-word;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+  </style>
+</head>
+<body>
+  <h2>Upload Handwritten Image</h2>
+  <input type="file" id="imageInput" accept="image/*" />
+  <button id="sendBtn">Recognize</button>
+  <p><strong>Recognized Text:</strong> <span id="result"></span></p>
+
+  <script>document.getElementById("sendBtn").addEventListener("click", async () => {
+  const file = document.getElementById("imageInput").files[0];
+  if (!file) return alert("Please select an image!");
+
+  const reader = new FileReader();
+  reader.onload = async function () {
+    const base64 = reader.result.split(",")[1];
+
+    const res = await fetch("http://localhost:3000/recognize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ base64Image: base64 }),
+    });
+
+    const data = await res.json();
+    document.getElementById("result").textContent = data.text || "Failed";
+  };
+
+  reader.readAsDataURL(file);
+});
+</script>
+</body>
+</html>
