@@ -80,7 +80,7 @@ button:hover {
   reader.onload = async function () {
     const base64 = reader.result.split(",")[1];
 
-    const res = await fetch("http://localhost:3000/recognize", {
+    const res = await fetch("https://gemini-handwriting-recognition.onrender.com/recognize", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ base64Image: base64 }),
